@@ -1,4 +1,6 @@
-﻿namespace Products.DataAccess.Interfaces;
+﻿using Products.Domain.Entities.Products;
+
+namespace Products.DataAccess.Interfaces;
 
 public interface IRepository<TEntity>
 {
@@ -8,7 +10,7 @@ public interface IRepository<TEntity>
 
     public Task<int> DeleteAsync(long id);
 
-    public Task<int> GetByIdAsync(long id);
+    public Task<Product> GetByIdAsync(long id);
 
     public Task<long> CountAsync();
 }
