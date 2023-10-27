@@ -1,6 +1,7 @@
 ﻿using Products.DataAccess.Interfaces.Products;
 using Products.DataAccess.Utils;
 using Products.Domain.Entities.Products;
+using Products.Domain.Exceptions.Products;
 using Products.Service.Dtos;
 using Products.Service.Interfaces;
 
@@ -9,15 +10,17 @@ namespace Products.Service.Services;
 public class ProductService : IProductService
 {
     private readonly IProductRepository _repository;
+    private readonly IPaginator _paginator;
 
-    public ProductService(IProductRepository productRepository)
+    public ProductService(IProductRepository productRepository, IPaginator paginator)
     {
         this._repository = productRepository;
+        this._paginator = paginator;
     }
 
-    public Task<long> CountAsync()
+    public async Task<long> CountAsync()
     {
-        throw new NotImplementedException();
+        return await _repository.CountAsync();
     }
 
     public async Task<bool> CreateAsync(ProductCreateDto dto)
@@ -32,14 +35,23 @@ public class ProductService : IProductService
         return result > 0;
     }
 
-    public Task<bool> DeleteAsync(long productId)
+    public async Task<bool> DeleteAsync(long productId)
     {
-        throw new NotImplementedException();
+        var product = await _repository.GetByIdAsync(productId);
+        if (product == null) throw new ProductNotFoundException();
+        var result = await _repository.DeleteAsync(productId);
+
+        return result > 0;
     }
 
-    public Task<IList<Product>> GetAllAsync(PaginationParams @params)
+    public async Task<IList<Product>> GetAllAsync(PaginationParams @params)
     {
-        throw new NotImplementedException();
+        var product = await _repository.GetAllAsync(@params);
+        
+        var count = await _repository.CountAsync();
+        _paginator.Paginate(count, @params);
+        
+        return product;
     }
 
     public Task<Product> GetByIdAsync(long productId)
