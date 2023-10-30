@@ -54,9 +54,16 @@ public class ProductService : IProductService
         return product;
     }
 
-    public Task<Product> GetByIdAsync(long productId)
+    public async Task<Product> GetByIdAsync(long productId)
     {
-        throw new NotImplementedException();
+        return await _repository.GetByIdAsync(@productId);
+    }
+
+    public async Task<IList<Product>> SearchAsync(string search, PaginationParams @params)
+    {
+        var product = await _repository.SearchAsync(search, @params);
+        if (product is null) throw new ProductNotFoundException();
+        return product;
     }
 
     public Task<bool> UpdateAsync(long ProductId, ProductUpdateDto dto)
