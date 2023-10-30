@@ -4,7 +4,7 @@ using Products.Domain.Entities.Products;
 
 namespace Products.DataAccess.Interfaces.Products;
 
-public interface IProductRepository : IRepository<Product>,IGetAll<Product>,ISearchable<Product>
+public interface IProductRepository : IRepository<Product>,IGetAll<Product>
 {
     public Task<IList<Product>> SearchAsync(string search, PaginationParams @params);
 }
