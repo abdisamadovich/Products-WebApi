@@ -161,8 +161,4 @@ public class ProductRepository : BaseRepository, IProductRepository
         }
     }
 
-    Task<Product> ISearchable<Product>.Searchable(string search, PaginationParams @params)
-    {
-        throw new NotImplementedException();
-    }
 }
