@@ -2,8 +2,8 @@
 
 namespace Products.DataAccess.Common.Interfaces;
 
-public interface ISearchable<TModel>
+public interface ISearchable<Product>
 {
-    public Task<(int ItemsCount, IList<TModel>)> Searchable(string search,
+    public Task<Product> Searchable(string search,
         PaginationParams @params);
 }

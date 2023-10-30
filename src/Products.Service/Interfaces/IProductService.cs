@@ -11,5 +11,6 @@ public interface IProductService
     public Task<IList<Product>> GetAllAsync(PaginationParams @params);
     public Task<bool> DeleteAsync(long productId);
     public Task<long> CountAsync();
-    public Task<Product> GetByIdAsync(long productId);  
+    public Task<Product> GetByIdAsync(long productId);
+    public Task<IList<Product>> SearchAsync(string search, PaginationParams @params);
 }

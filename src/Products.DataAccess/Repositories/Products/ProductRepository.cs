@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Products.DataAccess.Common.Interfaces;
 using Products.DataAccess.Interfaces.Products;
 using Products.DataAccess.Utils;
 using Products.Domain.Entities.Products;
@@ -113,9 +114,28 @@ public class ProductRepository : BaseRepository, IProductRepository
         }
     }
 
-    public Task<(int ItemsCount, IList<Product>)> Searchable(string search, PaginationParams @params)
+    public async Task<IList<Product>> SearchAsync(string search, PaginationParams @params)
     {
-        throw new NotImplementedException();
+        try
+        {
+            await _connection.OpenAsync();
+
+            string query = $"SELECT * FROM public.products WHERE (name ILIKE '%{search}%' OR type" +
+                $" ILIKE '%{search}%' OR brand ILIKE '%{search}%' OR price::text ILIKE '%{search}%') " +
+                    $"ORDER BY id DESC OFFSET {@params.GetSkipCount()} LIMIT {@params.PageSize}";
+
+            var products = await _connection.QueryAsync<Product>(query);
+
+            return products.ToList();
+        }
+        catch
+        {
+            return new List<Product>();
+        }
+        finally
+        {
+            await _connection.CloseAsync();
+        }
     }
 
     public async Task<int> UpdateAsync(long id, Product entity)
@@ -139,5 +159,10 @@ public class ProductRepository : BaseRepository, IProductRepository
         {
             await _connection.CloseAsync();
         }
+    }
+
+    Task<Product> ISearchable<Product>.Searchable(string search, PaginationParams @params)
+    {
+        throw new NotImplementedException();
     }
 }
