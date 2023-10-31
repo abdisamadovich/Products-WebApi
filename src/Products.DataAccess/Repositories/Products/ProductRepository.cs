@@ -202,12 +202,12 @@ public class ProductRepository : BaseRepository, IProductRepository
 
             if (minTime.HasValue)
             {
-                query += $" AND p.created_at >= '{minTime:yyyy-MM-dd HH:mm:ss}'";
+                query += $" AND p.created_at >= '{minTime:yyyy-MM-dd}'";
             }
 
             if (maxTime.HasValue)
             {
-                query += $" AND p.created_at <= '{maxTime:yyyy-MM-dd HH:mm:ss}'";
+                query += $" AND p.created_at <= '{maxTime:yyyy-MM-dd}'";
             }
 
             var products = await _connection.QueryAsync<Product>(query);
