@@ -14,4 +14,6 @@ public interface IProductService
     public Task<Product> GetByIdAsync(long productId);
     public Task<IList<Product>> SearchAsync(string search, PaginationParams @params);
     public Task<IList<Product>> SortAsync(string sort, PaginationParams @params);
+    Task<IList<Product>> FilterAsync(decimal? minPrice, decimal? maxPrice, DateTime? minTime, DateTime? maxTime, PaginationParams @params);
+
 }

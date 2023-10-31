@@ -9,8 +9,6 @@ namespace Products.DataAccess.Repositories.Products;
 
 public class ProductRepository : BaseRepository, IProductRepository
 {
-    private string _connectionString;
-
     public async Task<long> CountAsync()
     {
         try
@@ -141,25 +139,6 @@ public class ProductRepository : BaseRepository, IProductRepository
         }
     }
 
-    /*public async Task<IList<Product>> SortAsync(string sort, PaginationParams @params)
-    {
-        try
-        {
-            string query = $"SELECT p.* FROM products p ORDER BY 'p.%{sort}%';";
-            var products = await _connection.QueryAsync<Product>(query, sort);
-
-            return products.ToList();
-        }
-        catch
-        {
-            return new List<Product>();
-        }
-        finally
-        {
-            await _connection.CloseAsync();
-        }
-    }*/
-
     public async Task<IList<Product>> SortAsync(string sort, PaginationParams @params)
     {
         try
@@ -204,4 +183,44 @@ public class ProductRepository : BaseRepository, IProductRepository
         }
     }
 
+    public async Task<IList<Product>> FiltrAsync(decimal? minPrice, decimal? maxPrice, DateTime? minTime, 
+        DateTime? maxTime, PaginationParams @params)
+    {
+        try
+        {
+            string query = "SELECT p.* FROM products p WHERE 1=1";
+
+            if (minPrice.HasValue)
+            {
+                query += $" AND p.price >= {minPrice}";
+            }
+
+            if (maxPrice.HasValue)
+            {
+                query += $" AND p.price <= {maxPrice}";
+            }
+
+            if (minTime.HasValue)
+            {
+                query += $" AND p.created_at >= '{minTime:yyyy-MM-dd HH:mm:ss}'";
+            }
+
+            if (maxTime.HasValue)
+            {
+                query += $" AND p.created_at <= '{maxTime:yyyy-MM-dd HH:mm:ss}'";
+            }
+
+            var products = await _connection.QueryAsync<Product>(query);
+
+            return products.ToList();
+        }
+        catch
+        {
+            return new List<Product>();
+        }
+        finally
+        {
+            await _connection.CloseAsync();
+        }
+    }
 }

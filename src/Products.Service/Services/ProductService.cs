@@ -1,4 +1,5 @@
 ﻿using Products.DataAccess.Interfaces.Products;
+using Products.DataAccess.Repositories.Products;
 using Products.DataAccess.Utils;
 using Products.Domain.Entities.Products;
 using Products.Domain.Exceptions.Products;
@@ -42,6 +43,11 @@ public class ProductService : IProductService
         var result = await _repository.DeleteAsync(productId);
 
         return result > 0;
+    }
+
+    public async Task<IList<Product>> FilterAsync(decimal? minPrice, decimal? maxPrice, DateTime? minTime, DateTime? maxTime, PaginationParams @params)
+    {
+        return await _repository.FiltrAsync(minPrice, maxPrice, minTime, maxTime, @params);
     }
 
     public async Task<IList<Product>> GetAllAsync(PaginationParams @params)

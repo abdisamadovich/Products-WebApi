@@ -51,6 +51,25 @@ namespace Products.WebApi.Controllers
         public async Task<IActionResult> SortAsync([FromQuery] string sortProperty, [FromQuery] int page = 1)
             => Ok(await _service.SortAsync(sortProperty, new PaginationParams(page,maxPageSize)));
 
+        [HttpGet("filter")]
+        public async Task<IActionResult> FilterAsync(
+            [FromQuery] decimal? minPrice,
+            [FromQuery] decimal? maxPrice,
+            [FromQuery] DateTime? minTime,
+            [FromQuery] DateTime? maxTime,
+            [FromQuery] int page = 1)
+        {
+            try
+            {
+                var paginationParams = new PaginationParams(page, maxPageSize);
+                var products = await _service.FilterAsync(minPrice, maxPrice, minTime, maxTime, paginationParams);
+                return Ok(products);
+            }
+            catch
+            {
+                return StatusCode(500, "An error occurred while filtering products.");
+            }
+        }
     }
 }
     
