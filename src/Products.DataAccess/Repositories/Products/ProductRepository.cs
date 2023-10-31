@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using Products.DataAccess.Common.Interfaces;
 using Products.DataAccess.Interfaces.Products;
 using Products.DataAccess.Utils;
@@ -8,6 +9,8 @@ namespace Products.DataAccess.Repositories.Products;
 
 public class ProductRepository : BaseRepository, IProductRepository
 {
+    private string _connectionString;
+
     public async Task<long> CountAsync()
     {
         try
@@ -137,6 +140,46 @@ public class ProductRepository : BaseRepository, IProductRepository
             await _connection.CloseAsync();
         }
     }
+
+    /*public async Task<IList<Product>> SortAsync(string sort, PaginationParams @params)
+    {
+        try
+        {
+            string query = $"SELECT p.* FROM products p ORDER BY 'p.%{sort}%';";
+            var products = await _connection.QueryAsync<Product>(query, sort);
+
+            return products.ToList();
+        }
+        catch
+        {
+            return new List<Product>();
+        }
+        finally
+        {
+            await _connection.CloseAsync();
+        }
+    }*/
+
+    public async Task<IList<Product>> SortAsync(string sort, PaginationParams @params)
+    {
+        try
+        {
+            string query = $"SELECT p.* FROM products p ORDER BY {sort}";
+            var products = await _connection.QueryAsync<Product>(query);
+
+            return products.ToList();
+        }
+        catch
+        {
+            return new List<Product>();
+        }
+        finally
+        {
+            await _connection.CloseAsync();
+        }
+    }
+
+
 
     public async Task<int> UpdateAsync(long id, Product entity)
     {

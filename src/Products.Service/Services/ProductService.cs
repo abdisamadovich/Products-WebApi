@@ -66,6 +66,13 @@ public class ProductService : IProductService
         return product;
     }
 
+    public async Task<IList<Product>> SortAsync(string sort, PaginationParams @params)
+    {
+        var product = await _repository.SortAsync(sort, @params);
+        if (product is null) throw new ProductNotFoundException();
+        return product;
+    }
+
     public Task<bool> UpdateAsync(long ProductId, ProductUpdateDto dto)
     {
         throw new NotImplementedException();

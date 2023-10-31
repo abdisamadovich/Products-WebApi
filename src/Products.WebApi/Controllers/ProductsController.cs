@@ -46,5 +46,11 @@ namespace Products.WebApi.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> SearchAsync([FromQuery] string search, [FromQuery] int page = 1)
             => Ok(await _service.SearchAsync(search, new PaginationParams(page, maxPageSize)));
+
+        [HttpGet("sortProperty")]
+        public async Task<IActionResult> SortAsync([FromQuery] string sortProperty, [FromQuery] int page = 1)
+            => Ok(await _service.SortAsync(sortProperty, new PaginationParams(page,maxPageSize)));
+
     }
 }
+    
