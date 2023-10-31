@@ -47,7 +47,7 @@ namespace Products.WebApi.Controllers
         public async Task<IActionResult> SearchAsync([FromQuery] string search, [FromQuery] int page = 1)
             => Ok(await _service.SearchAsync(search, new PaginationParams(page, maxPageSize)));
 
-        [HttpGet("sortProperty")]
+        [HttpGet("sort")]
         public async Task<IActionResult> SortAsync([FromQuery] string sortProperty, [FromQuery] int page = 1)
             => Ok(await _service.SortAsync(sortProperty, new PaginationParams(page,maxPageSize)));
 
@@ -67,7 +67,7 @@ namespace Products.WebApi.Controllers
             }
             catch
             {
-                return StatusCode(500, "An error occurred while filtering products.");
+                return StatusCode(500, "Qayerdadir xato qilyapsiz");
             }
         }
     }

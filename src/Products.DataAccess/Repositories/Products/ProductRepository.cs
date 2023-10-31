@@ -158,8 +158,6 @@ public class ProductRepository : BaseRepository, IProductRepository
         }
     }
 
-
-
     public async Task<int> UpdateAsync(long id, Product entity)
     {
         try
